@@ -299,6 +299,7 @@ void print(const int bin[], int size){
     cout << endl;
 }
 
+// gets input value for each S box
 void getSboxI(int Ea[48], int Eb[48], int inputs[8][2]){
     for(int i = 0; i < 8; i++){
         int pow2 = 1;
@@ -310,6 +311,7 @@ void getSboxI(int Ea[48], int Eb[48], int inputs[8][2]){
     }
 }
 
+// gets output XOR value for each S box
 void getSboxO(int l[32], int c[32], int outputs[8]){
     int lXORc[32];
     XOR(l, c, lXORc, 32);
@@ -344,6 +346,7 @@ int main(){
     hex2bin(characteristic, chr);
     getLR(chr, t, c);
 
+    // counter for each S box and each key
     long long int KEY_COUNT[8][64];
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 64; j++){
@@ -353,35 +356,54 @@ int main(){
 
     while(getline(out, outA)){
         getline(out, outB);
+        // get ciphertexts for both inputs
+        
         int oA[64], oB[64], oXOR[64], lXOR[32], rXOR[32], lA[32], rA[32], lB[32], rB[32], eA[48], eB[48], eXOR[48];
+        
         hex2bin(outA, oA); hex2bin(outB, oB);
+        
+        // inverse final permutation
         invFP(oA);  invFP(oB);
+        
+        // get left and right halves of the ciphertexts
         getLR(oA, lA, rA);  getLR(oB, lB, rB);
+        
+        // get XOR value of cihpertexts, along with left and right halves
         XOR(oA, oB, oXOR, 64);
         getLR(oXOR, lXOR, rXOR);
-        E(rA, eA);  E(rB, eB);
+
+        // apply expansion to left half of output (right half of input to 5th round)
+        E(lA, eA);  E(lB, eB);
 
         int SboxI[8][2], SboxO[8];
+        // break eA and eB into 8 parts of 6 bits each 
         getSboxI(eA, eB, SboxI);
+        // get output XOR values of S-boxes from characteristic and ciphertext
         getSboxO(lXOR, c, SboxO);
 
+        // for each S box
         for(int i = 0; i < 8; i++){
             int a[6], b[6], k[6], oa, ob;
             dec2bin(SboxI[i][0], a, 6); dec2bin(SboxI[i][1], b, 6);
+            
+            // for each key
             for(int key = 0; key < 64; key++){
                 int aXORk[6], bXORk[6], ak, bk, Sa_, Sb_, Sa[4], Sb[4];
                 
                 dec2bin(key, k, 6);
                 
+                // compute output of S boxes, acc. to key
                 XOR(k, a, aXORk, 6);        XOR(k, b, bXORk, 6);
                 ak = bin2dec(aXORk, 6);     bk = bin2dec(bXORk, 6);
                 Sa_ = S[i][ak];             Sb_ = S[i][bk];
                 dec2bin(Sa_, Sa, 4);        dec2bin(Sb_, Sb, 4);
 
+                //  get XOR value of output of S boxes
                 int outXOR[4], oX;
                 XOR(Sa, Sb, outXOR, 4);
                 oX = bin2dec(outXOR, 4);
 
+                // check whether generated value and actual value are same
                 if(oX == SboxO[i]){
                     KEY_COUNT[i][key]++;
                 }
@@ -389,6 +411,7 @@ int main(){
         }
     }
 
+    // output distribution of keys for further processing
     for(int i = 0; i < 8; i++){
         text_keys << "S" << i+1 << "\t";
         for(int j = 0; j < 64; j++){
