@@ -128,7 +128,7 @@ void hex2bin(string hex, int bin[64]){
         if(hex[i] <= '9' && hex[i] >= '0')
             dig = hex[i] - '0';
         else if(hex[i] <= 'F' && hex[i] >= 'A')
-            dig = hex[i] - 'A';
+            dig = hex[i] - 'A' + 10;
         
         bin[4*i+3] = dig%2;
         bin[4*i+2] = (dig/2)%2;
@@ -354,7 +354,9 @@ int main(){
         }
     }
 
-    while(getline(out, outA)){
+    int iter = 0;
+    while(iter < 6){
+        getline(out, outA);
         getline(out, outB);
         // get ciphertexts for both inputs
         
@@ -373,8 +375,17 @@ int main(){
         XOR(oA, oB, oXOR, 64);
         getLR(oXOR, lXOR, rXOR);
 
+        // print(oA, 64);
+        // print(oB, 64);
+        // print(oXOR, 64);
+        // print(lXOR, 32);
+        // print(rXOR, 32);
+
         // apply expansion to left half of output (right half of input to 5th round)
         E(lA, eA);  E(lB, eB);
+
+        // print(lA, 32);
+        // print(eA, 48);
 
         int SboxI[8][2], SboxO[8];
         // break eA and eB into 8 parts of 6 bits each 
@@ -387,6 +398,10 @@ int main(){
             int a[6], b[6], k[6], oa, ob;
             dec2bin(SboxI[i][0], a, 6); dec2bin(SboxI[i][1], b, 6);
             
+            // int inXOR[6];
+            // XOR(a, b, inXOR, 6);
+            // print(inXOR, 6);
+            
             // for each key
             for(int key = 0; key < 64; key++){
                 int aXORk[6], bXORk[6], ak, bk, Sa_, Sb_, Sa[4], Sb[4];
@@ -398,7 +413,7 @@ int main(){
                 ak = bin2dec(aXORk, 6);     bk = bin2dec(bXORk, 6);
                 Sa_ = S[i][ak];             Sb_ = S[i][bk];
                 dec2bin(Sa_, Sa, 4);        dec2bin(Sb_, Sb, 4);
-
+                
                 //  get XOR value of output of S boxes
                 int outXOR[4], oX;
                 XOR(Sa, Sb, outXOR, 4);
@@ -410,6 +425,9 @@ int main(){
                 }
             }
         }
+        // cout << endl;
+        iter++;
+        // cout << iter << endl;
     }
 
     // output distribution of keys for further processing
@@ -433,9 +451,9 @@ int main(){
             }
         }
         dec2bin(ind, key_i, 6);
-        cout << "S" << i << "\tkey_max = ";
+        cout << "S" << i+1 << "\tkey_max = ";
         print(key_i, 6);
-        cout << "freq = " << mx << "\tavg = " << sum/64.0 << endl;
+        cout << "freq = " << mx << "\tavg = " << sum/64.0 << endl << endl;
 
         for(int k = 0; k < 6; k++){
             key_6i << key_i[k];

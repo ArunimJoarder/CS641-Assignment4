@@ -1,5 +1,7 @@
 #! /usr/bin/expect -f
 
+set timeout -1
+
 spawn ssh student@65.0.124.36 
 
 expect "*: "
@@ -20,18 +22,18 @@ set fout [open $fout_name "w"]
  
 # Read line by line
 foreach line $in_data {
-  puts "$line\r"
+  # puts "$line\r"
   
-  expect "*> "
+  expect "> "
   send "$line\r"
 
-  expect "$line\r" ;# discard command echo
-  expect "Slowly, a new text starts appearing on the screen. It reads ...\n\t\t\r"
-  expect -re "(.*)\r" ;# match and save the result
-  
-  expect "*> "
+  expect "$line\r"  # discard command echo
+  expect "Slowly, a new text starts appearing on the screen. It reads ..."
+  expect "\n\t\t*\n"  # match and save the result
+  puts -nonewline $fout "$expect_out(0,string)\n"
+
+  expect "Press c to continue> "
   send "c\r"
-  puts -nonewline $fout "$expect_out(1,string)\n"
 }
 close $fin
 close $fout
@@ -45,18 +47,18 @@ set fout [open $fout_name "w"]
  
 # Read line by line
 foreach line $in_data {
-  puts "$line\r"
+  # puts "$line\r"
   
-  expect "*> "
+  expect "> "
   send "$line\r"
 
-  expect "$line\r" ;# discard command echo
-  expect "Slowly, a new text starts appearing on the screen. It reads ...\n\t\t\r"
-  expect -re "(.*)\r" ;# match and save the result
-  
-  expect "*> "
+  expect "$line\r"  # discard command echo
+  expect "Slowly, a new text starts appearing on the screen. It reads ..."
+  expect "\n\t\t*\n"  # match and save the result
+  puts -nonewline $fout "$expect_out(0,string)\n"
+
+  expect "Press c to continue> "
   send "c\r"
-  puts -nonewline $fout "$expect_out(1,string)\n"
 }
 close $fin
 close $fout

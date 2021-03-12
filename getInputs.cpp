@@ -122,7 +122,7 @@ int main(){
     hex2bin(characteristic2, char2);    invIP(char2);
 
     // Generate 350 random input string pairs for each characteristic
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 350; i++){
         // Generate any one input
         dec2bin(i*i*i, inp);
 
