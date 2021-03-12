@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /usr/bin/expect -f
 
 spawn ssh student@65.0.124.36 
 
