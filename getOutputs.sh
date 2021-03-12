@@ -7,6 +7,7 @@ echo "hesoyamo"
 echo "4"
 echo "read"
 
+> outputs1.txt
 while read p; do
   echo $p
   read output
@@ -14,6 +15,7 @@ while read p; do
   echo $output >> outputs1.txt
 done < inputs1.txt
 
+> outputs2.txt
 while read p; do
   echo $p
   read output
