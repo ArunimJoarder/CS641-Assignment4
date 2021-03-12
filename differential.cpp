@@ -335,7 +335,7 @@ int main(){
 
     string outA, outB;
     ifstream out("outputs"+num+".txt");
-    ofstream text_keys("keys_distribution_"+num+".txt");
+    ofstream text_keys("keys_distribution_"+num+".txt"), key_6i("key_6i"+num+".txt");
 
     string characteristic;
     if(num.compare("1") == 0)
@@ -418,5 +418,27 @@ int main(){
             text_keys << setw(3) << KEY_COUNT[i][j] << "  ";
         }
         text_keys << "\n";
+    }
+
+    // get max key
+    for(int i = 0; i < 8; i++){
+        int mx = INT32_MIN, ind = -1, key_i[6];
+        double sum = 0;
+        for(int j = 0; j < 64; j++){
+            sum += KEY_COUNT[i][j];
+            if(KEY_COUNT[i][j] > mx){
+                mx = KEY_COUNT[i][j];
+                ind = j + 1;
+            }
+        }
+        dec2bin(ind, key_i, 6);
+        cout << "S" << i << "\tkey_max = ";
+        print(key_i, 6);
+        cout << "freq = " << mx << "\tavg = " << sum/64.0 << endl;
+
+        for(int k = 0; k < 6; k++){
+            key_6i << key_i[k];
+        }
+        key_6i << endl;
     }
 }
