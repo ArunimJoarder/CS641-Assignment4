@@ -360,7 +360,8 @@ int main(){
         
         int oA[64], oB[64], oXOR[64], lXOR[32], rXOR[32], lA[32], rA[32], lB[32], rB[32], eA[48], eB[48], eXOR[48];
         
-        hex2bin(outA, oA); hex2bin(outB, oB);
+        outA = fromSpHex(outA); outB = fromSpHex(outB);
+        hex2bin(outA, oA);      hex2bin(outB, oB);
         
         // inverse final permutation
         invFP(oA);  invFP(oB);
