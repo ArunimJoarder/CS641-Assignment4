@@ -1,11 +1,11 @@
 #! /usr/bin/env bash
 
-ssh student@65.0.124.36 
+spawn ssh student@65.0.124.36 
 
-echo "Cryptonite"
-echo "hesoyamo"
-echo "4"
-echo "read"
+send "Cryptonite"
+send "hesoyamo"
+send "4"
+send "read"
 
 > outputs1.txt
 while read p; do
