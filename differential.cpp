@@ -178,7 +178,7 @@ string fromSpHex(const string SpHex){
         if(temp <= 9 && temp >= 0)
             hex[i] = temp + '0';
         else if(temp <= 15 && temp >= 10)
-            hex[i] = temp + 'A';
+            hex[i] = temp + 'A' - 10;
     }
     return hex;
 }
@@ -306,28 +306,18 @@ void print(const int bin[], int size){
     cout << endl;
 }
 
-// gets input value for each S box
-void getSboxI(int Ea[48], int Eb[48], int inputs[8][2]){
-    for(int i = 0; i < 8; i++){
-        int pow2 = 1;
-        for(int j = 0; j < 6; j++){
-            inputs[i][0] += Ea[6*(i + 1) - j - 1] * pow2;
-            inputs[i][1] += Eb[6*(i + 1) - j - 1] * pow2;
+// separate parts of input based on which S-box they go to
+void separate(int inp[], int sep[], int size_i, int size_s){
+    int size = size_i/size_s, sum = 0, pow2 = 1;
+    for(int i = 0; i < size_s; i++){
+        sum = 0;    pow2 = 1;
+        for(int j = 0; j < size; j++){
+            sum += inp[size*(i+1) - j - 1]*pow2;
             pow2 *= 2;
         }
+        sep[i] = sum;
     }
-}
-
-// gets output XOR value for each S box
-void getSboxO(int Pin[32], int outputs[8]){
-    for(int i = 0; i < 8; i++){
-        int pow2 = 1;
-        for(int j = 0; j < 4; j++){
-            outputs[i] += Pin[4*(i + 1) - j - 1] * pow2;
-            pow2 *= 2;
-        }
-    }
-}
+} 
 
 int main(){
     string num ="\0";
@@ -347,9 +337,9 @@ int main(){
         characteristic = "4008000004000000";
     else
         characteristic = "0020000800000400";
-    int chr[64], c[32], t[32];
+    int chr[64], cl[32], cr[32];
     hex2bin(characteristic, chr);
-    getLR(chr, t, c);
+    getLR(chr, cl, cr);
 
     // counter for each S box and each key
     long long int KEY_COUNT[8][64];
@@ -393,45 +383,37 @@ int main(){
         // print(lA, 32);
         // print(eA, 48);
 
-        int SboxI[8][2], SboxO[8];
-        // break eA and eB into 8 parts of 6 bits each 
-        getSboxI(eA, eB, SboxI);
-        // get output XOR values of S-boxes from characteristic and ciphertext
-        int PoutXOR[32];
-        XOR(rXOR, t, PoutXOR, 32);
-        invP(PoutXOR);
-        getSboxO(PoutXOR, SboxO);
+        int alpha[8], betaXOR[8], gammaXOR[8];
+        separate(eA, &alpha[0], 48, 8);
+        // separate(eB, &alpha[1][0], 48, 8);
+        separate(eXOR, betaXOR,    48, 8);
 
-        // for each S box
+        int Sout[32];
+        XOR(rXOR, cr, Sout, 32);
+        invP(Sout);
+        separate(Sout, gammaXOR,    32, 8);
+        // for(int i = 0; i < 2; i++){
+        //     for(int j = 0; j < 8; j++){
+        //         cout << alpha[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        // for(int j = 0; j < 8; j++){
+        //     cout << betaXOR[j] << " ";
+        // }
+        // cout << endl;
+
         for(int i = 0; i < 8; i++){
-            int a[6], b[6], k[6], oa, ob;
-            dec2bin(SboxI[i][0], a, 6); dec2bin(SboxI[i][1], b, 6);
-            
-            // int inXOR[6];
-            // XOR(a, b, inXOR, 6);
-            // print(inXOR, 6);
-            
-            // for each key
-            for(int key = 0; key < 64; key++){
-                int aXORk[6], bXORk[6], Sa_, Sb_, Sa[4], Sb[4], ak, bk;
-                
-                dec2bin(key, k, 6);
-                
-                // compute output of S boxes, acc. to key
-                XOR(k, a, aXORk, 6);        XOR(k, b, bXORk, 6);
-                ak = bin2dec(aXORk,6);      bk = bin2dec(bXORk,6);
-                Sa_ = S[i][S_MAP[ak] - 1];  Sb_ = S[i][S_MAP[bk] - 1];
-                dec2bin(Sa_, Sa, 4);        dec2bin(Sb_, Sb, 4);
-                
-                //  get XOR value of output of S boxes
-                int outXOR[4], oX;
-                XOR(Sa, Sb, outXOR, 4);
-                oX = bin2dec(outXOR, 4);
+            int beta[2], S_b1, S_b2, key;
+            for(int b = 0; b < 64; b++){
+                beta[0] = b;
+                beta[1] = betaXOR[i]^beta[0];
+                S_b1 = S[i][S_MAP[beta[0]] - 1];
+                S_b2 = S[i][S_MAP[beta[1]] - 1];
 
-                // check whether generated value and actual value are same
-                if(oX == SboxO[i]){
+                if(S_b1^S_b2 == gammaXOR[i]){
+                    key = alpha[i]^beta[0];
                     KEY_COUNT[i][key]++;
-                    count++;
                 }
             }
         }
