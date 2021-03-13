@@ -312,13 +312,11 @@ void getSboxI(int Ea[48], int Eb[48], int inputs[8][2]){
 }
 
 // gets output XOR value for each S box
-void getSboxO(int l[32], int c[32], int outputs[8]){
-    int lXORc[32];
-    XOR(l, c, lXORc, 32);
+void getSboxO(int Pin[32], int outputs[8]){
     for(int i = 0; i < 8; i++){
         int pow2 = 1;
         for(int j = 0; j < 4; j++){
-            outputs[i] += lXORc[4*(i + 1) - j - 1] * pow2;
+            outputs[i] += Pin[4*(i + 1) - j - 1] * pow2;
             pow2 *= 2;
         }
     }
@@ -391,7 +389,10 @@ int main(){
         // break eA and eB into 8 parts of 6 bits each 
         getSboxI(eA, eB, SboxI);
         // get output XOR values of S-boxes from characteristic and ciphertext
-        getSboxO(lXOR, c, SboxO);
+        int PoutXOR[32];
+        XOR(rXOR, c, PoutXOR, 32);
+        invP(PoutXOR);
+        getSboxO(PoutXOR, SboxO);
 
         // for each S box
         for(int i = 0; i < 8; i++){

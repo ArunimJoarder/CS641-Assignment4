@@ -35,7 +35,7 @@ void hex2bin(string hex, int bin[64]){
         if(hex[i] <= '9' && hex[i] >= '0')
             dig = hex[i] - '0';
         else if(hex[i] <= 'F' && hex[i] >= 'A')
-            dig = hex[i] - 'A';
+            dig = hex[i] - 'A' + 10;
         
         bin[4*i+3] = dig%2;
         bin[4*i+2] = (dig/2)%2;
@@ -122,7 +122,7 @@ int main(){
     hex2bin(characteristic2, char2);    invIP(char2);
 
     // Generate 350 random input string pairs for each characteristic
-    for(int i = 0; i < 350; i++){
+    for(int i = 0; i < 512; i++){
         // Generate any one input
         dec2bin(i*i*i, inp);
 
