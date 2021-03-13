@@ -157,7 +157,7 @@ string toSpHex(const string hex){
         if(hex[i] <= '9' && hex[i] >= '0')
             spHex[i] = hex[i] - '0' + 'f';
         else if(hex[i] <= 'F' && hex[i] >= 'A')
-            spHex[i] = hex[i] - 'A' + 'f';
+            spHex[i] = hex[i] - 'A' + 'f' + 10;
     }
     return spHex;
 }
@@ -278,7 +278,7 @@ void invP(int bin[32]){
         temp[i] = bin[i];
     }
     for(int i = 0; i < 32; i++){
-        bin[P_[i]-1] = temp[i];
+        bin[i] = temp[INV_P_[i]-1];
     }
 }
 
@@ -352,9 +352,10 @@ int main(){
         }
     }
 
+    int count = 0;
+
     int iter = 0;
-    while(iter < 6){
-        getline(out, outA);
+    while(getline(out, outA)){
         getline(out, outB);
         // get ciphertexts for both inputs
         
@@ -405,14 +406,15 @@ int main(){
             
             // for each key
             for(int key = 0; key < 64; key++){
-                int aXORk[6], bXORk[6], ak, bk, Sa_, Sb_, Sa[4], Sb[4];
+                int aXORk[6], bXORk[6], Sa_, Sb_, Sa[4], Sb[4], aks, bks;
                 
                 dec2bin(key, k, 6);
                 
                 // compute output of S boxes, acc. to key
                 XOR(k, a, aXORk, 6);        XOR(k, b, bXORk, 6);
-                ak = bin2dec(aXORk, 6);     bk = bin2dec(bXORk, 6);
-                Sa_ = S[i][ak];             Sb_ = S[i][bk];
+                aks = aXORk[0]*32+aXORk[5]*16+aXORk[1]*8+aXORk[2]*4+aXORk[3]*2+aXORk[4]*1;
+                bks = bXORk[0]*32+bXORk[5]*16+bXORk[1]*8+bXORk[2]*4+bXORk[3]*2+bXORk[4]*1;
+                Sa_ = S[i][aks];             Sb_ = S[i][bks];
                 dec2bin(Sa_, Sa, 4);        dec2bin(Sb_, Sb, 4);
                 
                 //  get XOR value of output of S boxes
@@ -423,6 +425,7 @@ int main(){
                 // check whether generated value and actual value are same
                 if(oX == SboxO[i]){
                     KEY_COUNT[i][key]++;
+                    count++;
                 }
             }
         }
@@ -456,9 +459,10 @@ int main(){
         print(key_i, 6);
         cout << "freq = " << mx << "\tavg = " << sum/64.0 << endl << endl;
 
-        for(int k = 0; k < 6; k++){
-            key_6i << key_i[k];
-        }
+        key_6i << ind;
+        // for(int k = 0; k < 6; k++){
+        //     key_6i << key_i[k];
+        // }
         key_6i << endl;
     }
 }

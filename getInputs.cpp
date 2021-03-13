@@ -62,7 +62,7 @@ string toSpHex(const string hex){
         if(hex[i] <= '9' && hex[i] >= '0')
             spHex[i] = hex[i] - '0' + 'f';
         else if(hex[i] <= 'F' && hex[i] >= 'A')
-            spHex[i] = hex[i] - 'A' + 'f';
+            spHex[i] = hex[i] - 'A' + 'f' + 10;
     }
     return spHex;
 }
@@ -118,8 +118,8 @@ int main(){
 
     // Define characteristics and get reverse initial permutation of their values in binary
     string characteristic1 = "4008000004000000", characteristic2 = "0020000800000400", input, input1, input2;
-    hex2bin(characteristic1, char1);    invIP(char1);
-    hex2bin(characteristic2, char2);    invIP(char2);
+    hex2bin(characteristic1, char1);//    invIP(char1);
+    hex2bin(characteristic2, char2);//    invIP(char2);
 
     // Generate 350 random input string pairs for each characteristic
     for(int i = 0; i < 512; i++){
@@ -129,6 +129,9 @@ int main(){
         // Find pair such that xor with above input is characteristic
         XOR(inp, char1, inp1);
         XOR(inp, char2, inp2);
+
+        // apply inverse initial permutation
+        invIP(inp); invIP(inp1); invIP(inp2);
 
         // convert from binary to hexadecimal
         bin2hex(inp, input);
