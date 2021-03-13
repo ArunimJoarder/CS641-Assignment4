@@ -138,6 +138,16 @@ int main(){
         bin2hex(inp1, input1);
         bin2hex(inp2, input2);
 
+        // int Xor[64];
+        // string hexor;
+        // IP(inp);    IP(inp1);   IP(inp2);
+        // XOR(inp, inp1, Xor);
+        // bin2hex(Xor, hexor);
+        // cout << hexor << " ";
+        // XOR(inp, inp2, Xor);
+        // bin2hex(Xor, hexor);
+        // cout << hexor << endl;
+
         // convert to special hexadecimal as used in assignment (from 'f' to 'u') and write pair to files
         fi1 << toSpHex(input) << endl;
         fi1 << toSpHex(input1) << endl;
