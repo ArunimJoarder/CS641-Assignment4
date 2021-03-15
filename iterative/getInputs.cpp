@@ -1,115 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include "funcs.cpp"
 
 using namespace std;
 using INT = unsigned int;
-
-INT IP_[] = {
-  58,50,42, 34,26,18,10,2,
-  60,52,44,36,28,20,12,4,
-  62,54, 46, 38, 30, 22, 14,6,
-  64, 56, 48, 40,32,24, 16, 8,
-  57, 49, 41, 33,25,17, 9,1,
-  59, 51,43,35,27,19,11,3,
-  61,53,45,37,29,21,13, 5,
-  63,55, 47,39,31,23,15,7
-};
-
-/* REVERSE PERMUTATION (RFP) */
-
-INT RFP_[] = {
-  8,40,16,48,24,56,32,64,
-  7, 39,15,47,23,55,31,63,
-  6,38,14,46,22,54,30,62,
-  5,37,13,45, 21,53,29,61,
-  4,36,12,44,20,52,28,60,
-  3, 35, 11,43,19,51,27,59,
-  2, 34, 10, 42,18, 50,26,58,
-  1,33,9,41, 17, 49, 25,57
-};
-
-void hex2bin(string hex, int bin[64]){
-    int dig;
-    for(int i = 0; i < hex.length(); i++){
-        dig = 0;
-        if(hex[i] <= '9' && hex[i] >= '0')
-            dig = hex[i] - '0';
-        else if(hex[i] <= 'F' && hex[i] >= 'A')
-            dig = hex[i] - 'A' + 10;
-        
-        bin[4*i+3] = dig%2;
-        bin[4*i+2] = (dig/2)%2;
-        bin[4*i+1] = (dig/4)%2;
-        bin[4*i+0] = (dig/8)%2;
-    }
-}
-
-void bin2hex(int bin[64], string &hex){
-    hex.resize(16);
-    int dig = 0;
-    for(int i = 0; i < 16; i++){
-        dig = 8*bin[4*i] + 4*bin[4*i+1] + 2*bin[4*i+2] + 1*bin[4*i+3];
-        if(dig <= 9 && dig >= 0)
-            hex[i] = '0' + dig;
-        else if(dig <= 15 && dig >= 10)
-            hex[i] = 'A' + dig -10;
-    }
-}
-
-string toSpHex(const string hex){
-    string spHex(16, '-');
-    for(int i = 0; i < hex.length(); i++){
-        if(hex[i] <= '9' && hex[i] >= '0')
-            spHex[i] = hex[i] - '0' + 'f';
-        else if(hex[i] <= 'F' && hex[i] >= 'A')
-            spHex[i] = hex[i] - 'A' + 'f' + 10;
-    }
-    return spHex;
-}
-
-void dec2bin(long long int x, int bin[64]){
-    for(int i = 0; i < 64; i++){
-        bin[i] = 0;
-    }
-    for(int i = 0; i < 64 && x >= 0; i++){
-        bin[64 - i - 1] = x%2;
-        x /= 2;
-    }
-}
-
-void IP(int bin[64]){
-    int temp[64];
-    for(int i = 0; i < 64; i++){
-        temp[i] = bin[i];
-    }
-    for(int i = 0; i < 64; i++){
-        bin[i] = temp[IP_[i]-1];
-    }
-}
-
-void invIP(int bin[64]){
-    int temp[64];
-    for(int i = 0; i < 64; i++){
-        temp[i] = bin[i];
-    }
-    for(int i = 0; i < 64; i++){
-        bin[IP_[i]-1] = temp[i];
-    }
-}
-
-// Saves A xor B in result (all in binary)
-void XOR(const int A[64], const int B[64], int result[64]){
-    for(int i = 0; i < 64; i++){
-        result[i] = (A[i]+B[i])%2;
-    }
-}
-
-void print(const int bin[64]){
-    for(int i = 0; i < 64; i++){
-        cout << bin[i];
-    }
-    cout << endl;
-}
 
 int main(){
 
@@ -123,10 +17,10 @@ int main(){
     // Generate 350 random input string pairs for each characteristic
     for(int i = 0; i < 100000; i++){
         // Generate any one input
-        dec2bin(i, inp);
+        dec2bin(i, inp, 64);
 
         // Find pair such that xor with above input is characteristic
-        XOR(inp, char1, inp1);
+        XOR(inp, char1, inp1, 64);
 
         // apply inverse initial permutation
         invIP(inp); invIP(inp1);
