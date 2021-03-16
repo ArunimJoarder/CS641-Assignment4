@@ -135,7 +135,7 @@ int main(){
         print(key_i, 6);
         cout << "freq = " << mx << "\tavg = " << sum/64.0 << endl << endl;
 
-        key_6i << ind << "\t";
+        // key_6i << ind << "\t";
         for(int k = 0; k < 6; k++){
             key_6i << key_i[k];
         }
