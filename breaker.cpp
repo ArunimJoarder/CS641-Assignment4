@@ -230,7 +230,6 @@ int main()
 		else
 			key6 += key6_i2[i-1];
 	}
-	cout << key6 << endl;
 
 	char key[65];
 	for(int i=0 ; i<64 ; i++)

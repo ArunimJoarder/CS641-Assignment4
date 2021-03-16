@@ -124,7 +124,7 @@ int main(){
     // Generate 350 random input string pairs for each characteristic
     for(int i = 0; i < 512; i++){
         // Generate any one input
-        dec2bin(i*i*i*i, inp);
+        dec2bin(i*i*i, inp);
 
         // Find pair such that xor with above input is characteristic
         XOR(inp, char1, inp1);

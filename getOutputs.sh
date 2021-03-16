@@ -7,7 +7,7 @@ spawn ssh student@65.0.124.36
 expect "*: "
 send "Cryptonite\r"
 expect "*: "
-send "[redacted]\r"
+send "hesoyamo\r"
 expect "*: "
 send "4\r"
 expect "*> "
