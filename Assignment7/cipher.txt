@@ -1,0 +1,12 @@
+	You see the following written on the panel:
+
+	696162E4000000000680800A616862EA6FE5EBEE616862EA0684890A616862EA
+	00040900000000000684890A616862EA69656BE400000000696162E400000000
+
+	As you wonder what do these numbers mean, you hear a whisper in your ears ...
+	"I am so happy that he went away without noticing me. He is the one who bound
+	me to the hole. Oh, I was so scared that he will notice me!
+
+	You must be wondering about these numbers. This is the hash value of your password
+	which is created by a toy version of SHA3. This version of SHA3 has only three step mappings:
+	Theta, Pi, Chi. Also, the password is no more than 16 characters.
