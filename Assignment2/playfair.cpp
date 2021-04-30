@@ -131,7 +131,7 @@ int main(){
     
     string key= "SECURITY";
     
-    ifstream cipher("cipher.txt");
+    ifstream cipher("ciphertext.txt");
     char c;
     int i = 0;
     cipher >> noskipws;

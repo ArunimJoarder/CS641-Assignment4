@@ -1,36 +1,23 @@
-gsgqljmflhjringf ikkkisisgohllflr
+    You come up to the closed door and look at the screen ...
+	... there is nothing written on it as earlier.
 
-#1
-mi = gs
-li = ik
+	As you wonder if the spirit is around to help you out, you hear
+	it whispering in your ears ...
 
-#2
-mimm = gsgq
-lill = ikkk
+	"This is another magical screen. And this one I remember perfectly...
+	
+	Consider a block of size 8 bytes as 8 x 1 vector over F_{128} --
+	constructed using the degree 7 irreducible polynomial x^7 + x + 1
+	over F_2. Define two transformations: first a linear transformation 
+	given by invertible 8 x 8 key matrix A with elements from F_{128} and 
+	second an exponentiation given by 8 x 1 vector E whose elements are 
+	numbers between 1 and 126. E is applied on a block by taking the ith 
+	element of the block and raising it to the power given by ith element in E.
 
-#3
-mimmmg = gsgqlj
-lillif = ikkkis
+	Apply these transformations in the sequence EAEAE on the input block
+	to obtain the output block. Both E and A are part of the key.
 
-#4
-mimmmgmh = gsgqljmf
-lillifif = ikkkisis
+	You can see the coded password by simply whispering 'password' near 
+	the screen..."
 
-#5
-mimmmgmhmn = gsgqljmflh
-lillififif = ikkkisisgo
-
-#6
-mimmmgmhmnmg = gsgqljmflhjr
-lillifififif = ikkkisisgohl
-
-#7
-mimmmgmhmnmglt = gsgqljmflhjrin
-lillififififif = ikkkisisgohllf
-
-#8
-mimmmgmhmnmgltlr = gsgqljmflhjringf
-lillifififififif = ikkkisisgohllflr
-
-Therefore plaintext:
-	mimmmgmhmnmgltlrlillifififififif
+    password: gsgqljmflhjringfikkkisisgohllflr
